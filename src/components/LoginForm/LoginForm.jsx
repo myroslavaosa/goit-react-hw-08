@@ -1,9 +1,14 @@
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/auth/operations';
 import { useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 import s from "./LoginForm.module.css";
 
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email format').required('Required'),
+  password: Yup.string().min(6, 'Too short!').required('Required'),
+});
 
 export default function LoginForm() {
   const dispatch = useDispatch();
@@ -14,7 +19,7 @@ export default function LoginForm() {
       const resultAction = await dispatch(login(values));
       if (login.fulfilled.match(resultAction)) {
         resetForm();
-        navigate('/contacts'); // Redirect on success
+        navigate('/contacts');
       } else {
         setErrors({ general: resultAction.payload || 'Login failed' });
       }
@@ -26,17 +31,30 @@ export default function LoginForm() {
   };
 
   return (
-    <Formik initialValues={{ email: '', password: '' }} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={{ email: '', password: '' }}
+      validationSchema={LoginSchema}
+      onSubmit={handleSubmit}
+    >
       {({ errors, isSubmitting }) => (
         <Form className={s.form}>
-          <label>Email
-            <Field name="email" type="email" required autoComplete="email" />
+          <label>
+            Email
+            <Field name="email" type="email" autoComplete="email" />
+            <ErrorMessage name="email" component="div" className={s.error} />
           </label>
-          <label>Password
-            <Field name="password" type="password" required autoComplete="current-password" />
+
+          <label>
+            Password
+            <Field name="password" type="password" autoComplete="current-password" />
+            <ErrorMessage name="password" component="div" className={s.error} />
           </label>
-          <button type="submit" disabled={isSubmitting}>Login</button>
-          {errors.general && <p style={{ color: 'red' }}>{errors.general}</p>}
+
+          {errors.general && <div className={s.error}>{errors.general}</div>}
+
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Logging in...' : 'Login'}
+          </button>
         </Form>
       )}
     </Formik>
