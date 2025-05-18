@@ -1,6 +1,7 @@
 // redux/auth/operations.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { resetContacts } from '../contacts/slice'; //
 
 axios.defaults.baseURL = 'https://connections-api.goit.global';
 
@@ -58,6 +59,8 @@ export const logout = createAsyncThunk(
 
       // Clear token from localStorage
       localStorage.removeItem('token');
+
+      thunkAPI.dispatch(resetContacts());
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response?.data?.message || error.message);
     }

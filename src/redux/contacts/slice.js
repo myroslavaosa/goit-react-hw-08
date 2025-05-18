@@ -1,7 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createSelector } from '@reduxjs/toolkit';
 import { fetchContacts, addContact, deleteContact } from './operations';
-import { createSelector } from "@reduxjs/toolkit";
-
 
 const initialState = {
   items: [],
@@ -21,7 +19,9 @@ const handleRejected = (state, action) => {
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState,
-
+  reducers: {
+    resetContacts: () => initialState  // 🟢 Додаємо reset тут
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchContacts.pending, handlePending)
@@ -50,17 +50,16 @@ const contactsSlice = createSlice({
   },
 });
 
+// 🟢 Правильний експорт
+export const { resetContacts } = contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;
 
-// Прості селектори
+// Селектори
 export const selectContacts = (state) => state.contacts.items;
 export const selectLoading = (state) => state.contacts.isLoading;
 export const selectError = (state) => state.contacts.error;
-
-// Імпорт з filtersSlice або оголошення тут
 export const selectNameFilter = (state) => state.filters.name;
 
-// Мемоізований селектор
 export const selectFilteredContacts = createSelector(
   [selectContacts, selectNameFilter],
   (contacts, filter) => {
