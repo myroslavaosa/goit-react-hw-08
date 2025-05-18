@@ -1,0 +1,31 @@
+/* src/components/Navigation/Navigation.module.css */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #04ebd875;
+    position: fixed;
+    top: 0;
+    width: 50%;
+}
+
+.links {
+    display: flex;
+    gap: 20px;
+}
+
+.authArea {
+    display: flex;
+    gap: 15px;
+}
+
+.link {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.active {
+    color: #90c8ff;
+}

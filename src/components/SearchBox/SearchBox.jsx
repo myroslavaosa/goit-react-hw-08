@@ -3,7 +3,7 @@ import { useId } from "react";
 import { FaBookmark } from "react-icons/fa";
 import s from "./SearchBox.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { changeFilter } from "../../redux/filtersSlice";
+import { changeFilter } from "../../redux/filters/slice";
 
 function SearchBox() {
   const findUserID = useId();
